@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-
+use Carbon\Carbon;
 return new class extends Migration
 {
     /**
@@ -14,12 +14,34 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('username')->unique();
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
+            $table->string('roleId');
+            $table->string('email_verified_at')->nullable();
+            $table->boolean('status')->comment('0 => Inactive, 1=> Active, 2=> Pending, 3=> Block ');
             $table->string('password');
-            $table->rememberToken();
             $table->timestamps();
         });
+        DB::table('users')->insert([
+            [
+            'name'      => 'superadmin',
+            'username'  => 'superadmin',
+            'email'     => 'superadmin@gmail.com',
+            'password'      => md5('123456'),
+            'status'        =>  1,
+            'roleId'        => 1,
+            'created_at'    =>Carbon::now()
+            ], 
+            [
+            'name'      => 'admin',
+            'username'  => 'admin',
+            'email'     => 'admin@gmail.com',
+            'password'      => md5('123456'),
+            'status'        =>  1,
+            'roleId'        => 2,
+            'created_at'    =>Carbon::now()
+            ],
+        ]);
     }
 
     /**
